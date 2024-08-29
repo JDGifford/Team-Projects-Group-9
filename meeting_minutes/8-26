@@ -16,4 +16,6 @@ Josh:
 Jordan:
 
 Chris:
-
+Researched machine learning libraries to use for image classification machine learning model
+Decided to use Numpy, Pandas, cv2, matplotlib, sklearn, and PIL libraries,
+Got started on Image classification machine learning model
