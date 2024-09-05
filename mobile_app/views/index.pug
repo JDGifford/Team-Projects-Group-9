@@ -1,0 +1,10 @@
+extends layout.pug
+block content
+  <h1 class="text-center">Death Star Plans</h1>
+
+  <div class="d-grid gap-3">
+    each data in imageList     
+      <div class="p-2">
+        <img src= #{data} alt= img class='img-fluid'/>
+      </div>
+  </div>
