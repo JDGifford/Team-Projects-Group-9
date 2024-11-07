@@ -1,15 +1,18 @@
+import paramiko.client
 import cv2
 import numpy as np
 import glob
 import os
 import datetime
 
+from paramiko import SSHClient
+
 # Once the path where the images will be stored is decided, we'll substitute it in
 
 path = os.path.dirname(__file__) # currently points to the folder the script is in. Can change it for the final product
 
 colorBounds = [np.array([0,0,220]), np.array([50,50,255])]
-cropBuffer = 15    #in pixels, extra pixels to get a little bit around the red circles 
+cropBuffer = 7    #in pixels, extra pixels to get a little bit around the red circles 
 
 # Main loop for the process, pulls in the folder of images to identify and then performs the identification process
 def __main__():
@@ -53,6 +56,16 @@ def TrimImage(imgAddress, id, log):
         cv2.imwrite(path + "/output/" + str(id) + "_cropped.png", cropped_img)
     else:
         log.write(str(datetime.datetime.now()) + ": Could not find circles in: " + imgAddress + "\n")
+
+def uploadImages():
+    images = [f for f in glob.glob(path + "/images/**")]
+
+    client = SSHClient()
+    client.load_system_host_keys()
+
+    for image in images:
+        
+
 
 
 __main__()
