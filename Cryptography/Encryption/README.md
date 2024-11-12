@@ -1,0 +1,2 @@
+# Encryption algorithm script
+- This script works by gathering all images in the scripts parent folder + "\images". All images (files with .png extensions) are encrypted utilzing OpenSSL in AES 256-CBC mode. It take two input files, the symmetric cipher key (aes_key.bin) and the initialization vector (iv.bin) from the script's parent directory. The encrypted file names are formatted according to a naming convention that works for the web app. All encrypted files are saved in scripts parent folder + "\enc".
