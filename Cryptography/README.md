@@ -1,5 +1,5 @@
-# Cyptographric Protocal
-## Encryption Protocal File Structure
+# Cyptographric Protocol
+## Encryption Protocol File Structure
 ### Encryption Script Parent Directory
 - images (Image Directory)
   - image1.png
@@ -10,7 +10,7 @@
 - compress-enc.sh (renaming, compression, and encryption script)
 - aes_key.bin (AES key file)
 - iv.bin (initialization vector file)
-## Decryption Protocal File Structure
+## Decryption Protocol File Structure
 ### Decryption Script Parent Directory
 - decrypted_images
   - images (Image Directory)
