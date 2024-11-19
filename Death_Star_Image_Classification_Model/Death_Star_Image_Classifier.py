@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from tqdm.notebook import tqdm
 from torchvision.utils import draw_bounding_boxes
-import albumentations as A
+#import albumentations as A
 from torchvision.models import resnet50, ResNet50_Weights
 import pandas as pd
 import numpy as np
@@ -16,11 +16,18 @@ from sklearn import preprocessing as p
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, accuracy_score, recall_score, precision_score, f1_score
+from tensorflow import keras
+from tensorflow.keras.preprocessing import image
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import AdaBoostClassifier
 import psutil
 #import sys
 #import utils
 import timm
+import time
+import joblib
 
+startTime = time.time()
 DEATH_STAR_IMAGES = "Death_Star_Image_Dataset/"
 NON_DEATH_STAR_IMAGES = "Non_Death_Star_Image_Dataset/"
 
@@ -29,6 +36,9 @@ img_list = [x for x in os.listdir(DEATH_STAR_IMAGES)]
 img_list2 = [y for y in os.listdir(NON_DEATH_STAR_IMAGES)]
 img = cv2.imread(DEATH_STAR_IMAGES + "Death_Star_Plans(91).png")
 img = cv2.resize(img, (532, 445), interpolation=cv2.INTER_AREA)
+#image_path = DEATH_STAR_IMAGES + "Death_Star_Plans(67).png"
+#img = image.load_img(image_path, target_size=(224, 224)) 
+#plt.imshow(img)
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 upLeftPoint = (249, 205)
 lowRightPoint = (278, 229)
@@ -57,6 +67,7 @@ for i in range(len(image_size_list)):#calculate the mean image size
 avg_row /= len(image_size_list)
 avg_col /= len(image_size_list)
 avg_size = (int(avg_row), int(avg_col))
+print("Value of avg_size is: ", avg_size)
 
 def data_Preprocess(images):
   images_arr = []
@@ -102,21 +113,24 @@ x_train, x_test, y_train, y_test = train_test_split(im_list, label_list, test_si
 neigh = NearestNeighbor
 neigh.train(neigh, x_train, y_train)
 y_pred = neigh.predict(neigh, x_test)
+endTime = time.time()
+print("Value of startTime is: ", startTime)
+print("Value of endTime is: ", endTime)
+print("Time it takes from startTime to endTime is: ", endTime - startTime)
 
+#fileName = "Death_Star_Classifier.sav"
+#joblib.dump(neigh, fileName)#Save the trained Death star image classification model
+neighbor = joblib.load('Death_Star_Classifier.sav')#Load the trained Death star image classification model
+y_pred = neighbor.predict(neighbor, x_test)
+print("Value of x_test is: ", y_test)
+print("Value of y_predict is: ", y_pred)
 print("Accuracy is: ", accuracy_score(y_test, y_pred))
-print("Micro precision is: ", precision_score(y_test, y_pred, average='micro'))
-print("Micro recall is: ", recall_score(y_test, y_pred, average='micro'))
-print("Micro F1-Score is: ", f1_score(y_test, y_pred, average='micro'))
-print("Macro precision is: ", precision_score(y_test, y_pred, average='macro'))
-print("Macro recall is: ", recall_score(y_test, y_pred, average='macro'))
-print("Macro F1-Score is: ", f1_score(y_test, y_pred, average='macro'))
-
-tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
-print("TP:", tp, "TN:", tn, "FP:", fp, "FN:", fn)
-print("Accuracy is:", accuracy_score(y_test, y_pred))
 print("Precision is:", precision_score(y_test, y_pred))
 print("Recall is:", recall_score(y_test, y_pred))
 print("F1-Score is:", f1_score(y_test, y_pred))
+
+tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
+print("TP:", tp, "TN:", tn, "FP:", fp, "FN:", fn)
 process = psutil.Process(os.getpid())
 memory_info = process.memory_info()
 print("Memory used is:", memory_info.rss / 1024**2, "MB")
