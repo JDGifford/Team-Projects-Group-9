@@ -1,4 +1,4 @@
-# Cyptographric Protocol
+# Cryptographic Protocol
 ## Encryption Protocol File Structure
 ### Encryption Script Parent Directory
 - images (Image Directory)
