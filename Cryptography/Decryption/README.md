@@ -1,0 +1,2 @@
+# Decryption algorithm script
+- The Decryption script works by first decrypting \enc\images-enc.zip using the symmetric cipher key (aes_key.bin) and initialization vector (iv.bin) from the script's parent directory.The compressed file is then decompressed into directory decrypted_images. Images will be in a nested directory named images .
