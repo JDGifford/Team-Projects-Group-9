@@ -21,15 +21,6 @@ min_max_scaler = p.MinMaxScaler()
 img_list = [x for x in os.listdir(DEATH_STAR_IMAGES)]
 img_list2 = [y for y in os.listdir(NON_DEATH_STAR_IMAGES)]
 img_list3 = [z for z in os.listdir(FLASH_DRIVE_IMAGES)]
-#img = cv2.imread(DEATH_STAR_IMAGES + "Death_Star_Plans(91).png")
-#img = cv2.resize(img, (532, 445), interpolation=cv2.INTER_AREA)
-#image_path = DEATH_STAR_IMAGES + "Death_Star_Plans(67).png"
-#img = image.load_img(image_path, target_size=(224, 224)) 
-#plt.imshow(img)
-#img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-#upLeftPoint = (249, 205)
-#lowRightPoint = (278, 229)
-#bound_box_img = cv2.rectangle(img, upLeftPoint, lowRightPoint, (255, 0, 0), 2)
 
 y = np.ones(len(img_list))
 y2 = np.zeros(len(img_list2))
@@ -73,7 +64,8 @@ def data_Preprocess(images):
     original_ims.append(images[i][0])
   im_list, label_list = zip(*images_arr)
   images_arr = np.asarray(im_list)
-  return original_ims, images_arr, label_list
+  #return original_ims, images_arr, label_list
+  return images_arr, label_list
 
 class NearestNeighbor:
   def __init__(self):
@@ -94,27 +86,8 @@ class NearestNeighbor:
       Ypred[i] = self.Ytr[min_index]#predict the label of the ith test image
     return Ypred
   
-#original_train, im_list, label_list = data_Preprocess(train_list)
-original_train = train_list
-print("Value of original_train is: ", original_train)
-train_set, test_set = train_test_split(original_train, test_size=0.20, shuffle=False)
-print("Value of train_set is: ", train_set, " and has length ", len(train_set))
-print("Value of test_set is: ", test_set, " and has length ", len(test_set))
-origin_train, x_train, y_train = data_Preprocess(train_set)
-origin_test, x_test, y_test = data_Preprocess(test_set)
-#x_train, x_test, y_train, y_test = train_test_split(im_list, label_list, test_size=0.20, shuffle=False)#Split dataset into train and test data
-#x_train, x_test, y_train, y_test = train_test_split(original_train, label_list, test_size=0.20, shuffle=False)#Split dataset into train and test data
-if "Death_Star" in origin_test[0]:
-  image = Image.open(DEATH_STAR_IMAGES + origin_test[0])
-else:
-  image = Image.open(NON_DEATH_STAR_IMAGES + origin_test[0])
-image = image.convert("L")#convert image to black and white image
-image = image.resize((avg_size))#resize the image to the mean size of all images
-image = min_max_scaler.fit_transform(image)#normalize the image using Min-Max Scaler
-image_arr = np.asarray(image)#conver the image to numpy array of pixel values
-image_arr = image_arr.flatten()#flatten the image to dimension (1xd) thus it'll be just 1 row of d pixel values and d is # of rows * # of columns in numpy array of pixel values
-print("Value of image_arr is: ", image_arr)
-print("Value of x_test at index 0 is: ", x_test[0])
+im_list, label_list = data_Preprocess(train_list)
+x_train, x_test, y_train, y_test = train_test_split(im_list, label_list, test_size=0.20, shuffle=False)#Split dataset into train and test data
 
 neigh = NearestNeighbor
 neigh.train(neigh, x_train, y_train)
@@ -124,28 +97,22 @@ y_pred = neigh.predict(neigh, x_test)
 #joblib.dump(neigh, fileName)#Save the trained Death star image classification model
 neighbor = joblib.load('Death_Star_Classifier.sav')#Load the trained Death star image classification model
 y_pred = neighbor.predict(neighbor, x_test)
-print("Value of x_test is: ", y_test)
+print("Value of y_test is: ", y_test)
 print("Value of y_predict is: ", y_pred)
 print("Accuracy is: ", accuracy_score(y_test, y_pred))
 print("Precision is:", precision_score(y_test, y_pred))
 print("Recall is:", recall_score(y_test, y_pred))
 print("F1-Score is:", f1_score(y_test, y_pred))
 
-print("Value of original_train is: ", original_train)
-print("Value of x_test is: ", x_test)
-print("Value of y_test is: ", y_test)
-print("Value of image 1 from flash drive images is: ", img_list3[0])
 flash_imgs = []
 for i in range(len(img_list3)):
   image = Image.open(FLASH_DRIVE_IMAGES + img_list3[i])
-  print("Value of img_list3[i] is: ", img_list3[i])
   image = image.convert("L")#convert image to black and white image
   image = image.resize((avg_size))#resize the image to the mean size of all images
   image = min_max_scaler.fit_transform(image)#normalize the image using Min-Max Scaler
   image_arr = np.asarray(image)#conver the image to numpy array of pixel values
   image_arr = image_arr.flatten()#flatten the image to dimension (1xd) thus it'll be just 1 row of d pixel values and d is # of rows * # of columns in numpy array of pixel values
   flash_imgs.append(image_arr)
-  print("Value of img_list3[i] is: ", img_list3[i], " and has size ", image_arr.shape)
 flash_imgs = np.asarray(flash_imgs)
 y_predict = neighbor.predict(neighbor, flash_imgs)
 print("Value of y_predict is: ", y_predict)
