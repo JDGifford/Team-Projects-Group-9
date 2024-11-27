@@ -1,6 +1,6 @@
 import numpy as np
 import os
-import cv2
+# import cv2
 import random
 import shutil
 import matplotlib.pyplot as plt
@@ -9,13 +9,13 @@ from skimage.io import imshow
 from sklearn import preprocessing as p
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score
-from tensorflow.keras.preprocessing import image
+# from tensorflow.keras.preprocessing import image
 import joblib
 
-DEATH_STAR_IMAGES = "Death_Star_Image_Dataset/"
-NON_DEATH_STAR_IMAGES = "Non_Death_Star_Image_Dataset/"
-FLASH_DRIVE_IMAGES = "Flash_Drive_Images/"  
-CORRECT_IMAGES = "Correctly_Identified_Death_Star_Images/"
+DEATH_STAR_IMAGES = "./Death_Star_Image_Dataset/"
+NON_DEATH_STAR_IMAGES = "./Non_Death_Star_Image_Dataset/"
+FLASH_DRIVE_IMAGES = "./Flash_Drive_Images/"  
+CORRECT_IMAGES = "./Correctly_Identified_Death_Star_Images/"
 
 min_max_scaler = p.MinMaxScaler()
 img_list = [x for x in os.listdir(DEATH_STAR_IMAGES)]
