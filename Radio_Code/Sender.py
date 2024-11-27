@@ -5,7 +5,7 @@
 import time
 import struct
 import hashlib
-from pyrf24 import RF24, RF24_PA_LOW, RF24_DRIVER, RF24_2MBPS
+from pyrf24 import RF24, RF24_PA_LOW, RF24_DRIVER, RF24_2MBPS, RF24_PA_MAX
 from imageToByteString import getImageData
 
 CSN_PIN = 0
@@ -27,7 +27,7 @@ address = [b"1node", b"2node"]
 if not radio.begin():
     raise OSError("nRF24L01 hardware isn't responding")
 
-radio.set_pa_level(RF24_PA_LOW) # Set to low power for close range testing
+radio.set_pa_level(RF24_PA_MAX) # Set to low power for close range testing
 radio.setDataRate(RF24_2MBPS)
 
 # Set addresses for transmission and receiving
