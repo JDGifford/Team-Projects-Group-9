@@ -24,6 +24,8 @@ def __main__():
         for i in imageAddresses:
             TrimImage(i, imgId, logFile)
             imgId = imgId + 1
+
+        uploadImages()
     else:
         logFile.write("No images found in directory.")
     logFile.close()
@@ -58,14 +60,22 @@ def TrimImage(imgAddress, id, log):
         log.write(str(datetime.datetime.now()) + ": Could not find circles in: " + imgAddress + "\n")
 
 def uploadImages():
-    images = [f for f in glob.glob(path + "/images/**")]
+    images = [f for f in glob.glob(path + "/output/**")]
 
     client = SSHClient()
-    client.load_system_host_keys()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
+    client.connect('3.213.86.237', username='dse-user', key_filename='./dse-user.pem', timeout=30)
+    sftp_client = client.open_sftp()
+
+    i = 0
     for image in images:
-        
+        i += 1
+        remote_path = '/home/dse-user/MobileApp/public/image/ds{:02d}.jpg'.format(i) 
+        sftp_client.put(image, remote_path)
 
+    sftp_client.close()
+    client.close()
 
 
 __main__()
